@@ -1,0 +1,1 @@
+![Video Alt Text](./STM32F103T6C8_SIMULATION.mp4)
