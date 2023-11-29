@@ -1,2 +1,14 @@
 ﻿  student.c
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(248,10): warning C4473: 'printf' : not enough arguments passed for format string
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(248,10): message : placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(248,10): message : the missing variadic argument 1 is required by format string '%d'
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(350,10): warning C4477: 'printf' : format string '%n' requires an argument of type 'int *', but variadic argument 2 has type 'int'
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(350,10): warning C4313: 'printf': '%n' in format string conflicts with argument 2 of type 'int'
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(399,10): warning C4473: 'printf' : not enough arguments passed for format string
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(399,10): message : placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(399,10): message : the missing variadic argument 1 is required by format string '%d'
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(403,10): warning C4473: 'printf' : not enough arguments passed for format string
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(403,10): message : placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(403,10): message : the missing variadic argument 1 is required by format string '%d'
+E:\New folder (2)\StudentMannagmentSystem\StudentMannagmentSystem\student.c(502,4): warning C4550: expression evaluates to a function which is missing an argument list
   StudentMannagmentSystem.vcxproj -> E:\New folder (2)\StudentMannagmentSystem\x64\Debug\StudentMannagmentSystem.exe
