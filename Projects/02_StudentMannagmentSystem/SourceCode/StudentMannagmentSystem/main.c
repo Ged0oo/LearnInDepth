@@ -15,9 +15,9 @@ void main(void)
 
 	while (1)
 	{
-		printf("\n\t\t\t\t********************************************\n");
-		printf("\t\t\t\t* Choose the Task that you want to Perform *");
-		printf("\n\t\t\t\t********************************************\n\n");
+		printf("\n********************************************\n");
+		printf("* Choose the Task that you want to Perform *");
+		printf("\n********************************************\n\n");
 			 
 		printf(" 1- Add the Student Details Manually\n");
 		printf(" 2- Add the Student Details From Text File\n");
@@ -32,7 +32,7 @@ void main(void)
 
 		printf(" \nEnter your Choice to Perform the task : ");
 		scanf("%d", &option);
-		printf("\n=======================================================\n");
+		printf("\n===============================================\n");
 
 		switch (option)
 		{
@@ -43,7 +43,7 @@ void main(void)
 			case 5: Find_Student_From_Course_ID(&queue); break;
 			case 6: Print_Student_Count(&queue); break;
 			case 7: Delete_Student_With_ID(&queue); break;
-			case 8:  Delete_Student_With_ID(&queue); break;
+			case 8:  Update_Student_With_ID(&queue); break;
 			case 9: Show_Student_Data_Base(&queue); break;
 			case 10:  return 1; break;
 			default: break;

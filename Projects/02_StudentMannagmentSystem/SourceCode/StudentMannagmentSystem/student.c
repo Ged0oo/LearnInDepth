@@ -6,7 +6,7 @@ EN_FIFO_RET_t FIFO_Init(ST_FIFO_t* _queue, ST_Student_t* _student, uint32_t _len
 	EN_FIFO_RET_t ret = FIFO_NAK;
 	if (NULL == _student)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		ret = FIFO_NAK;
 	}
 	else
@@ -27,7 +27,7 @@ EN_FIFO_RET_t FIFO_Enqueue(ST_FIFO_t* _queue, ST_Student_t _student)
 	EN_FIFO_RET_t ret = FIFO_NAK;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		ret = FIFO_NAK;
 	}
 	else if (FIFO_FULL == FIFO_Is_Full(_queue))
@@ -57,14 +57,14 @@ EN_FIFO_RET_t FIFO_Is_Full(ST_FIFO_t* _queue)
 	EN_FIFO_RET_t ret = FIFO_NAK;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		ret = FIFO_NAK;
 	}
 	else
 	{
 		if (_queue->count == _queue->lenght)
 		{
-			printf("\n[ERROR] Enqueue Failde ==> Queue Full\n");
+			printf("\n [ERROR] Enqueue Failde ==> Queue Full\n");
 			ret = FIFO_FULL;
 		}
 		else
@@ -83,7 +83,7 @@ EN_FIFO_RET_t Student_Add_Manually(ST_FIFO_t* _queue)
 
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		ret = FIFO_NAK;
 	}
 	else if (FIFO_FULL == FIFO_Is_Full(_queue))
@@ -101,7 +101,7 @@ EN_FIFO_RET_t Student_Add_Manually(ST_FIFO_t* _queue)
 		if (Check_Student_ID(_queue, _roll))
 		{
 			//error
-			printf("\n[Error] Roll Number %d is already exist\n", _roll);
+			printf("\n [ERROR] Roll Number %d is already exist\n", _roll);
 			ret = FIFO_NAK;
 		}
 		else 
@@ -128,11 +128,11 @@ EN_FIFO_RET_t Student_Add_Manually(ST_FIFO_t* _queue)
 
 			if (FIFO_ACK == FIFO_Enqueue(_queue, newStudent))
 			{
-				printf("\n [INFO] Student Enqueued Successfully\n");
+				printf("\n  [INFO] Student Enqueued Successfully\n");
 			}
 			else
 			{
-				printf("\n [ERROR] Student Enqueued Failed\n");
+				printf("\n  [ERROR] Student Enqueued Failed\n");
 				ret = FIFO_NAK;
 			}
 			ret = FIFO_ACK;
@@ -166,7 +166,7 @@ EN_FIFO_RET_t Student_Add_From_File(ST_FIFO_t* _queue)
 
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		ret = FIFO_NAK;
 	}
 	else if (FIFO_FULL == FIFO_Is_Full(_queue))
@@ -178,7 +178,7 @@ EN_FIFO_RET_t Student_Add_From_File(ST_FIFO_t* _queue)
 		StudentFile = fopen("Student_DataStructure.txt", "r");
 		if (NULL == StudentFile)
 		{
-			printf("\n[ERROR] File Open ==> Failed\n");
+			printf("\n [ERROR] File Open ==> Failed\n");
 			ret = FIFO_NAK;
 		}
 		else
@@ -188,7 +188,7 @@ EN_FIFO_RET_t Student_Add_From_File(ST_FIFO_t* _queue)
 				fscanf(StudentFile, "%d", &newStudent.rollNumber);
 				if (Check_Student_ID(_queue, newStudent.rollNumber))
 				{
-					printf("\n[ERROR] Roll Number %d already exist\n", newStudent.rollNumber);
+					printf("\n [ERROR] Roll Number %d already exist\n", newStudent.rollNumber);
 					fscanf(StudentFile, "%*[^\n]");
 					continue;
 				}
@@ -205,16 +205,16 @@ EN_FIFO_RET_t Student_Add_From_File(ST_FIFO_t* _queue)
 
 					if (FIFO_Enqueue(_queue, newStudent) == FIFO_ACK)
 					{
-						printf("\n[INFO] Roll Number %d saved Succsesfully\n", newStudent.rollNumber);
+						printf("\n [INFO] Roll Number %d saved Succsesfully\n", newStudent.rollNumber);
 					}
 					else
 					{
-						printf("\n[ERROR] Adding Stident From File Failed\n");
+						printf("\n [ERROR] Adding Stident From File Failed\n");
 					}
 				}
 
 			}
-			printf("\n[INFO] File Content Saved Successflly\n");
+			printf("\n [INFO] File Content Saved Successflly\n");
 			fclose(StudentFile);
 			ret = FIFO_ACK;
 		}
@@ -230,7 +230,7 @@ void Find_StudentFrom_ID(ST_FIFO_t* _queue)
 
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 
@@ -241,7 +241,7 @@ void Find_StudentFrom_ID(ST_FIFO_t* _queue)
 	_student = Check_Student_ID(_queue, id);
 	if (NULL == _student)
 	{
-		printf("\n[ERROR] Can't find Student with ID Number %d\n", id);
+		printf("\n [ERROR] Can't find Student with ID Number %d\n", id);
 	}
 	else
 	{
@@ -272,12 +272,12 @@ void Find_Student_From_FirstName(ST_FIFO_t* _queue)
 	ST_Student_t *_student = _queue->tail;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else if (0 == _queue->count)
 	{
-		printf("\n[ERROR] Student Data Base Empty ==> Failed\n");
+		printf("\n [ERROR] Student Data Base Empty ==> Failed\n");
 		return;
 	}
 
@@ -305,7 +305,7 @@ void Find_Student_From_FirstName(ST_FIFO_t* _queue)
 	}
 	if (0 == flag)
 	{
-		printf("\n[ERROR] Student with Name : %s Not Fount\n", name);
+		printf("\n [ERROR] Student with Name : %s Not Fount\n", name);
 		return;
 	}
 }
@@ -316,12 +316,12 @@ void Find_Student_From_Course_ID(ST_FIFO_t* _queue)
 	ST_Student_t* _student = _queue->tail;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else if (0 == _queue->count)
 	{
-		printf("\n[ERROR] Student Data Base Empty ==> Failed\n");
+		printf("\n [ERROR] Student Data Base Empty ==> Failed\n");
 		return;
 	}
 
@@ -342,7 +342,7 @@ void Find_Student_From_Course_ID(ST_FIFO_t* _queue)
 
 	if (0 == count)
 	{
-		printf("\n[ERROR] Course ID not found\n");
+		printf("\n [ERROR] Course ID not found\n");
 		return;
 	}
 	else
@@ -357,12 +357,12 @@ void Delete_Student_With_ID(ST_FIFO_t* _queue)
 	ST_Student_t* _student = _queue->tail;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else if (0 == _queue->count)
 	{
-		printf("\n[ERROR] Student Data Base Empty ==> Failed\n");
+		printf("\n [ERROR] Student Data Base Empty ==> Failed\n");
 		return;
 	}
 
@@ -396,11 +396,11 @@ void Delete_Student_With_ID(ST_FIFO_t* _queue)
 
 	if (0 == flag)
 	{
-		printf("\n[ERROR] Student with ID:%d not Found\n");
+		printf("\n [ERROR] Student with ID:%d not Found\n", id);
 	}
 	else
 	{
-		printf("\n[INFO] Student with ID:%d Deleted Successfully\n");
+		printf("\n [INFO] Student with ID:%d Deleted Successfully\n", id);
 	}
 }
 
@@ -413,12 +413,12 @@ void Update_Student_With_ID(ST_FIFO_t* _queue)
 
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else if (0 == _queue->count)
 	{
-		printf("\n[ERROR] Student Data Base Empty ==> Failed\n");
+		printf("\n [ERROR] Student Data Base Empty ==> Failed\n");
 		return;
 	}
 
@@ -434,7 +434,7 @@ void Update_Student_With_ID(ST_FIFO_t* _queue)
 	}
 	else
 	{
-		printf("[ERROR] Student with ID:%d not Found\n", id);
+		printf(" [ERROR] Student with ID:%d not Found\n", id);
 		return;
 	}
 
@@ -461,7 +461,7 @@ void Update_Student_With_ID(ST_FIFO_t* _queue)
 				if (newID == _student->rollNumber)
 				{
 					flag = 1;
-					printf("\n[ERROR] Studen with ID Number already Exist\n");
+					printf("\n [ERROR] Studen with ID Number already Exist\n");
 					break;
 				}
 
@@ -478,47 +478,47 @@ void Update_Student_With_ID(ST_FIFO_t* _queue)
 			if (0 == flag)
 			{
 				studentMod->rollNumber = newID;
-				printf("\n[INFO] Student ID Number Updated Successfully\n");
+				printf("\n [INFO] Student ID Number Updated Successfully\n");
 				Print_Student(studentMod);
 			}
 			break;
 
 		case 2:
-			printf("Enter New Student First Name\n");
-			scanf("%s", studentMod->lastName);
-			printf("\n[INFO] Student First Name Updated Successfully\n");
+			printf("Enter New Student First Name : ");
+			scanf("%s", studentMod->firstName);
+			printf("\n [INFO] Student First Name Updated Successfully\n");
 			Print_Student(studentMod);
 			break;
 
 		case 3:
-			printf("Enter New Student Last Name\n");
+			printf("Enter New Student Last Name : ");
 			scanf("%s", studentMod->lastName);
-			printf("\n[INFO] Student Last Name Updated Successfully\n");
+			printf("\n [INFO] Student Last Name Updated Successfully\n");
 			Print_Student(studentMod);
 			break;
 
 		case 4:
-			printf("Enter New Student GPA\n");
+			printf("Enter New Student GPA : ");
 			fflush;
 			scanf("%f", &studentMod->gpa);
-			printf("\n[INFO] Student GPA Updated Successfully\n");
+			printf("\n [INFO] Student GPA Updated Successfully\n");
 			Print_Student(studentMod);
 			break;
 
 		case 5:
-			printf("Enter New Course Number to update[1:%d]\n", COURSES_NUMBER);
+			printf("Enter New Course Number to update[1:%d] : ", COURSES_NUMBER);
 			int course;
 			flush;
 			scanf("%d", &course);
 			printf("Enter New Course ID : ");
 			flush;
 			scanf("%d", &studentMod->courseID[course - 1]);
-			printf("\n[INFO] Student Course Number Updated Successfully\n");
+			printf("\n [INFO] Student Course Number Updated Successfully\n");
 			Print_Student(studentMod);
 			break;
 
 		default:
-			printf("\n[ERROR] Unallowed Operation\n");
+			printf("\n [ERROR] Unallowed Operation\n");
 			break;
 	}
 }
@@ -528,7 +528,7 @@ void Print_Student_Count(ST_FIFO_t* _queue)
 {
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else
@@ -547,12 +547,12 @@ void Show_Student_Data_Base(ST_FIFO_t* _queue)
 	ST_Student_t* _student = _queue->tail;
 	if (NULL == _queue)
 	{
-		printf("\n[ERROR] Queue Data Base Initialization ==> Failed\n");
+		printf("\n [ERROR] Queue Data Base Initialization ==> Failed\n");
 		return;
 	}
 	else if (0 == _queue->count)
 	{
-		printf("\n[ERROR] Student Data Base Empty ==> Failed\n");
+		printf("\n [ERROR] Student Data Base Empty ==> Failed\n");
 		return;
 	}
 	else
