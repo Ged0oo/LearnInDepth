@@ -22,6 +22,9 @@ void main(void)
 
 	// RCC Init PORTA
 	RCC_APB2ENR |= (1<<2);
+	RCC_CR |= (1<<0);
+	RCC_CFGR |= (5<<11);
+	RCC_CFGR |= (4<<8);
 
 	while(1)
 	{
