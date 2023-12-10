@@ -1,0 +1,191 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x20000000         0x00005000         xrw
+FLASH            0x08000000         0x00010000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x20005000                _estack = (ORIGIN (RAM) + LENGTH (RAM))
+                0x00000200                _Min_Heap_Size = 0x200
+                0x00000400                _Min_Stack_Size = 0x400
+
+.isr_vector     0x08000000      0x10c
+                0x08000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x10c startup_stm32f103xxx.o
+                0x08000000                vector_Table
+                0x0800010c                . = ALIGN (0x4)
+
+.text           0x0800010c       0xf0
+                0x0800010c                . = ALIGN (0x4)
+ *(.text)
+ .text          0x0800010c       0x58 main.o
+                0x0800010c                main
+ .text          0x08000164       0x98 startup_stm32f103xxx.o
+                0x08000164                RTC_Alarm_IRQHandler
+                0x08000164                EXTI2_IRQHandler
+                0x08000164                DebugMon_Handler
+                0x08000164                TIM1_CC_IRQHandler
+                0x08000164                HardFault_Handler
+                0x08000164                SysTick_Handler
+                0x08000164                PVD_IRQHandler
+                0x08000164                PendSV_Handler
+                0x08000164                NMI_Handler
+                0x08000164                BootRAM
+                0x08000164                EXTI3_IRQHandler
+                0x08000164                EXTI0_IRQHandler
+                0x08000164                I2C2_EV_IRQHandler
+                0x08000164                UsageFault_Handler
+                0x08000164                ADC1_2_IRQHandler
+                0x08000164                SPI1_IRQHandler
+                0x08000164                TAMPER_IRQHandler
+                0x08000164                DMA1_Channel4_IRQHandler
+                0x08000164                USART3_IRQHandler
+                0x08000164                RTC_IRQHandler
+                0x08000164                DMA1_Channel7_IRQHandler
+                0x08000164                I2C1_ER_IRQHandler
+                0x08000164                CAN1_RX1_IRQHandler
+                0x08000164                TIM4_IRQHandler
+                0x08000164                I2C1_EV_IRQHandler
+                0x08000164                DMA1_Channel6_IRQHandler
+                0x08000164                TIM3_IRQHandler
+                0x08000164                RCC_IRQHandler
+                0x08000164                TIM1_TRG_COM_IRQHandler
+                0x08000164                DMA1_Channel1_IRQHandler
+                0x08000164                Default_Handler
+                0x08000164                EXTI15_10_IRQHandler
+                0x08000164                EXTI9_5_IRQHandler
+                0x08000164                SPI2_IRQHandler
+                0x08000164                MemManage_Handler
+                0x08000164                SVC_Handler
+                0x08000164                DMA1_Channel5_IRQHandler
+                0x08000164                EXTI4_IRQHandler
+                0x08000164                USB_LP_CAN1_RX0_IRQHandler
+                0x08000164                USB_HP_CAN1_TX_IRQHandler
+                0x08000164                DMA1_Channel3_IRQHandler
+                0x08000164                TIM1_UP_IRQHandler
+                0x08000164                WWDG_IRQHandler
+                0x08000164                TIM2_IRQHandler
+                0x08000164                TIM1_BRK_IRQHandler
+                0x08000164                EXTI1_IRQHandler
+                0x08000164                USART2_IRQHandler
+                0x08000164                I2C2_ER_IRQHandler
+                0x08000164                DMA1_Channel2_IRQHandler
+                0x08000164                CAN1_SCE_IRQHandler
+                0x08000164                FLASH_IRQHandler
+                0x08000164                BusFault_Handler
+                0x08000164                USART1_IRQHandler
+                0x08000164                USBWakeUp_IRQHandler
+                0x08000170                Reset_Handler
+ *(.text*)
+                0x080001fc                . = ALIGN (0x4)
+                0x080001fc                _etext = .
+
+.glue_7         0x080001fc        0x0
+ .glue_7        0x080001fc        0x0 linker stubs
+
+.glue_7t        0x080001fc        0x0
+ .glue_7t       0x080001fc        0x0 linker stubs
+
+.vfp11_veneer   0x080001fc        0x0
+ .vfp11_veneer  0x080001fc        0x0 linker stubs
+
+.v4_bx          0x080001fc        0x0
+ .v4_bx         0x080001fc        0x0 linker stubs
+
+.iplt           0x080001fc        0x0
+ .iplt          0x080001fc        0x0 startup_stm32f103xxx.o
+
+.rodata         0x080001fc        0x4
+                0x080001fc                . = ALIGN (0x4)
+ *(.rodata)
+ .rodata        0x080001fc        0x4 startup_stm32f103xxx.o
+                0x080001fc                MSP_value
+ *(.rodata*)
+                0x08000200                . = ALIGN (0x4)
+                0x08000200                _sidata = LOADADDR (.data)
+
+.rel.dyn        0x08000200        0x0
+ .rel.iplt      0x08000200        0x0 startup_stm32f103xxx.o
+
+.data           0x20000000        0x0 load address 0x08000200
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _sdata = .
+ *(.data)
+ .data          0x20000000        0x0 main.o
+ .data          0x20000000        0x0 startup_stm32f103xxx.o
+ *(.data*)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _edata = .
+
+.igot.plt       0x20000000        0x0 load address 0x08000200
+ .igot.plt      0x20000000        0x0 startup_stm32f103xxx.o
+                0x20000000                . = ALIGN (0x4)
+
+.bss            0x20000000        0x0 load address 0x08000200
+                0x20000000                _sbss = .
+ *(.bss)
+ .bss           0x20000000        0x0 main.o
+ .bss           0x20000000        0x0 startup_stm32f103xxx.o
+ *(.bss*)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _ebss = .
+
+._user_heap_stack
+                0x20000000      0x600 load address 0x08000200
+                0x20000000                . = ALIGN (0x8)
+                0x20000200                . = (. + _Min_Heap_Size)
+ *fill*         0x20000000      0x200 
+                0x20000600                . = (. + _Min_Stack_Size)
+ *fill*         0x20000200      0x400 
+                0x20000600                . = ALIGN (0x8)
+LOAD main.o
+LOAD startup_stm32f103xxx.o
+OUTPUT(TestLab_1.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000      0x1d4
+ .debug_info    0x00000000       0x69 main.o
+ .debug_info    0x00000069      0x16b startup_stm32f103xxx.o
+
+.debug_abbrev   0x00000000      0x126
+ .debug_abbrev  0x00000000       0x55 main.o
+ .debug_abbrev  0x00000055       0xd1 startup_stm32f103xxx.o
+
+.debug_loc      0x00000000       0xb4
+ .debug_loc     0x00000000       0x38 main.o
+ .debug_loc     0x00000038       0x7c startup_stm32f103xxx.o
+
+.debug_aranges  0x00000000       0x40
+ .debug_aranges
+                0x00000000       0x20 main.o
+ .debug_aranges
+                0x00000020       0x20 startup_stm32f103xxx.o
+
+.debug_line     0x00000000      0x115
+ .debug_line    0x00000000       0x59 main.o
+ .debug_line    0x00000059       0xbc startup_stm32f103xxx.o
+
+.debug_str      0x00000000      0x186
+ .debug_str     0x00000000       0xd4 main.o
+ .debug_str     0x000000d4       0xb2 startup_stm32f103xxx.o
+                                0x178 (size before relaxing)
+
+.comment        0x00000000       0x4d
+ .comment       0x00000000       0x4d main.o
+                                 0x4e (size before relaxing)
+ .comment       0x0000004d       0x4e startup_stm32f103xxx.o
+
+.ARM.attributes
+                0x00000000       0x2d
+ .ARM.attributes
+                0x00000000       0x2d main.o
+ .ARM.attributes
+                0x0000002d       0x2d startup_stm32f103xxx.o
+
+.debug_frame    0x00000000       0x7c
+ .debug_frame   0x00000000       0x2c main.o
+ .debug_frame   0x0000002c       0x50 startup_stm32f103xxx.o
