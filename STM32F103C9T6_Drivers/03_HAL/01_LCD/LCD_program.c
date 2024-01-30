@@ -3,16 +3,16 @@
  * Author: Mohamed_Nagy
  * https://github.com/Ged0oo 
  * https://www.linkedin.com/in/mohamednagyofficial/
- * Created on January 30, 2023, 8:41 PM
+ * Created on January 30, 2024, 8:41 PM
  */
 
 #include "BIT_MATH.h"
 #include "LCD_interface.h"
 #include "LCD_config.h"
 
-static void lcd_send_4bits(chr_lcd_4bit_t *lcd, uint8_t _data_command);
+static void lcd_send_4bits(chr_lcd_4bit_t *lcd, uint8 _data_command);
 static void lcd_4bit_send_enable_signal(chr_lcd_4bit_t *lcd);
-static void lcd_4bit_set_cursor(chr_lcd_4bit_t *lcd, uint8_t row, uint8_t coulmn);
+static void lcd_4bit_set_cursor(chr_lcd_4bit_t *lcd, uint8 row, uint8 coulmn);
 
 chr_lcd_4bit_t lcd_1 =
 {
@@ -40,7 +40,7 @@ chr_lcd_4bit_t lcd_1 =
 
 void lcd_4bit_intialize(chr_lcd_4bit_t *lcd)
 {
-	uint8_t l_data_pins_counter = 0;
+	uint8 l_data_pins_counter = 0;
 	if(NULL == lcd)
 	{
 		return;
@@ -67,7 +67,7 @@ void lcd_4bit_intialize(chr_lcd_4bit_t *lcd)
 		}
 
 		//__delay_ms(20);
-		for(uint32_t i=0 ; i<11000 ; i++) asm("NOP");
+		for(uint32 i=0 ; i<11000 ; i++) asm("NOP");
 		lcd_4bit_send_command(lcd, 0x33);
 		lcd_4bit_send_command(lcd, 0x32);
 		lcd_4bit_send_command(lcd, _LCD_4BIT_MODE_2_LINE);
@@ -79,7 +79,7 @@ void lcd_4bit_intialize(chr_lcd_4bit_t *lcd)
 	}
 }
 
-void lcd_4bit_send_command(chr_lcd_4bit_t *lcd, uint8_t command)
+void lcd_4bit_send_command(chr_lcd_4bit_t *lcd, uint8 command)
 {
 	if(NULL == lcd)
 	{
@@ -96,9 +96,9 @@ void lcd_4bit_send_command(chr_lcd_4bit_t *lcd, uint8_t command)
 	}
 }
 
-void lcd_4bit_send_custom_char(chr_lcd_4bit_t *lcd, const uint8_t _chr[], uint8_t row, uint8_t column, uint8_t mem_pos)
+void lcd_4bit_send_custom_char(chr_lcd_4bit_t *lcd, const uint8 _chr[], uint8 row, uint8 column, uint8 mem_pos)
 {
-	uint8_t lcd_counter = 0;
+	uint8 lcd_counter = 0;
 	if(NULL == lcd)
 	{
 		return;
@@ -114,7 +114,7 @@ void lcd_4bit_send_custom_char(chr_lcd_4bit_t *lcd, const uint8_t _chr[], uint8_
 	}
 }
 
-void lcd_4bit_send_char_data(chr_lcd_4bit_t *lcd, uint8_t data)
+void lcd_4bit_send_char_data(chr_lcd_4bit_t *lcd, uint8 data)
 {
 	if(NULL == lcd)
 	{
@@ -131,7 +131,7 @@ void lcd_4bit_send_char_data(chr_lcd_4bit_t *lcd, uint8_t data)
 	}
 }
 
-void lcd_4bit_send_char_data_pos(chr_lcd_4bit_t *lcd,uint8_t row, uint8_t column, uint8_t data)
+void lcd_4bit_send_char_data_pos(chr_lcd_4bit_t *lcd,uint8 row, uint8 column, uint8 data)
 {
 	if(NULL == lcd)
 	{
@@ -144,7 +144,7 @@ void lcd_4bit_send_char_data_pos(chr_lcd_4bit_t *lcd,uint8_t row, uint8_t column
 	}
 }
 
-void lcd_4bit_send_string(chr_lcd_4bit_t *lcd, uint8_t *str)
+void lcd_4bit_send_string(chr_lcd_4bit_t *lcd, uint8 *str)
 {
 	if(NULL == lcd)
 	{
@@ -159,7 +159,7 @@ void lcd_4bit_send_string(chr_lcd_4bit_t *lcd, uint8_t *str)
 	}
 }
 
-void lcd_4bit_send_string_pos(chr_lcd_4bit_t *lcd, uint8_t row, uint8_t column, uint8_t *str)
+void lcd_4bit_send_string_pos(chr_lcd_4bit_t *lcd, uint8 row, uint8 column, uint8 *str)
 {
 	if(NULL == lcd)
 	{
@@ -180,10 +180,10 @@ void LCD_Clear(chr_lcd_4bit_t *lcd)
 	lcd_4bit_send_command(lcd, _LCD_CLEAR);
 }
 
-void LCD_WriteNumber_Position(uint32_t Number, uint8_t row, uint8_t column)
+void LCD_WriteNumber_Position(uint32 Number, uint8 row, uint8 column)
 {
 	column--;
-	uint8_t i=0, arr[10], j;
+	uint8 i=0, arr[10], j;
 	if(Number==0) lcd_4bit_send_char_data_pos(&lcd_1, row, column, '0');
 	else
 	{
@@ -201,24 +201,24 @@ void LCD_WriteNumber_Position(uint32_t Number, uint8_t row, uint8_t column)
 
 }
 
-static void lcd_send_4bits(chr_lcd_4bit_t *lcd, uint8_t _data_command)
+static void lcd_send_4bits(chr_lcd_4bit_t *lcd, uint8 _data_command)
 {
-	MGPIO_voidWritePortPin(&(lcd->lcd_data[0]), (_data_command >> 0) & (uint8_t)0x01);
-	MGPIO_voidWritePortPin(&(lcd->lcd_data[1]), (_data_command >> 1) & (uint8_t)0x01);
-	MGPIO_voidWritePortPin(&(lcd->lcd_data[2]), (_data_command >> 2) & (uint8_t)0x01);
-	MGPIO_voidWritePortPin(&(lcd->lcd_data[3]), (_data_command >> 3) & (uint8_t)0x01);
+	MGPIO_voidWritePortPin(&(lcd->lcd_data[0]), (_data_command >> 0) & (uint8)0x01);
+	MGPIO_voidWritePortPin(&(lcd->lcd_data[1]), (_data_command >> 1) & (uint8)0x01);
+	MGPIO_voidWritePortPin(&(lcd->lcd_data[2]), (_data_command >> 2) & (uint8)0x01);
+	MGPIO_voidWritePortPin(&(lcd->lcd_data[3]), (_data_command >> 3) & (uint8)0x01);
 }
 
 static void lcd_4bit_send_enable_signal(chr_lcd_4bit_t *lcd)
 {
 	MGPIO_voidWritePortPin(&(lcd->lcd_en), GPIO_HIGH);
 	//__delay_us(5);
-	for(uint8_t i=0 ; i<10 ; i++);
+	for(uint8 i=0 ; i<10 ; i++);
 	MGPIO_voidWritePortPin(&(lcd->lcd_en), GPIO_LOW);
 	for(uint16 i=0 ; i<2000 ; i++);
 }
 
-static void lcd_4bit_set_cursor(chr_lcd_4bit_t *lcd, uint8_t row, uint8_t coulmn)
+static void lcd_4bit_set_cursor(chr_lcd_4bit_t *lcd, uint8 row, uint8 coulmn)
 {
     coulmn--;
     switch(row)

@@ -169,6 +169,8 @@ typedef struct
 	Buses_Prescaler Prescaler;
 }RCC_Config_t;
 
+extern RCC_Config_t RCC_obj;
+
 /* prototypes of functions */
 void MRCC_voidClockInit(RCC_Config_t *RCC_Config);
 void MRCC_voidPeripheralClockEnable(uint8 Copy_u8BusName, RCC_Peripheral_t Copy_u8PeripheralName);

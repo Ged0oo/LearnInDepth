@@ -3,7 +3,7 @@
  * Author: Mohamed_Nagy
  * https://github.com/Ged0oo 
  * https://www.linkedin.com/in/mohamednagyofficial/
- * Created on January 30, 2023, 8:41 PM
+ * Created on January 30, 2024, 8:41 PM
  */
 
 #ifndef __LCD_INTERFACE_H__
@@ -47,14 +47,16 @@ typedef struct
     GPIO_ConfigType lcd_data[4];
 }chr_lcd_4bit_t;
 
+extern chr_lcd_4bit_t lcd_1;
+
 void lcd_4bit_intialize(chr_lcd_4bit_t *lcd);
-void lcd_4bit_send_command(chr_lcd_4bit_t *lcd, uint8_t command);
-void lcd_4bit_send_custom_char(chr_lcd_4bit_t *lcd, const uint8_t _chr[], uint8_t row, uint8_t column, uint8_t mem_pos);
-void lcd_4bit_send_char_data(chr_lcd_4bit_t *lcd, uint8_t data);
-void lcd_4bit_send_char_data_pos(chr_lcd_4bit_t *lcd,uint8_t row, uint8_t column, uint8_t data);
-void lcd_4bit_send_string(chr_lcd_4bit_t *lcd, uint8_t *str);
-void lcd_4bit_send_string_pos(chr_lcd_4bit_t *lcd, uint8_t row, uint8_t column, uint8_t *str);
+void lcd_4bit_send_command(chr_lcd_4bit_t *lcd, uint8 command);
+void lcd_4bit_send_custom_char(chr_lcd_4bit_t *lcd, const uint8 _chr[], uint8 row, uint8 column, uint8 mem_pos);
+void lcd_4bit_send_char_data(chr_lcd_4bit_t *lcd, uint8 data);
+void lcd_4bit_send_char_data_pos(chr_lcd_4bit_t *lcd,uint8 row, uint8 column, uint8 data);
+void lcd_4bit_send_string(chr_lcd_4bit_t *lcd, uint8 *str);
+void lcd_4bit_send_string_pos(chr_lcd_4bit_t *lcd, uint8 row, uint8 column, uint8 *str);
 void LCD_Clear(chr_lcd_4bit_t *lcd);
-void LCD_WriteNumber_Position(uint32_t Number, uint8_t row, uint8_t column);
+void LCD_WriteNumber_Position(uint32 Number, uint8 row, uint8 column);
 
 #endif
