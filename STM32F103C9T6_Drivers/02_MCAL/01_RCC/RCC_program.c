@@ -228,3 +228,62 @@ static void RCC_voidBus_Prescaler(RCC_Config_t *Copy_u8RCC_Config)
 		RCC->CFGR |= ((Copy_u8RCC_Config->Prescaler.ABP2_Prescaler) << 11);
 	}
 }
+
+void RCC_xGetAPB2_Freq(uint32 *pu32Freq)
+{
+	switch(RCC_obj.Prescaler.ABP2_Prescaler)
+	{
+		case APB2_NOT_DEVIDED:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY;
+			break;
+
+		case APB2_DIVIDED_BY_2:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 2;
+			break;
+
+		case APB2_DIVIDED_BY_4:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 4;
+			break;
+
+		case APB2_DIVIDED_BY_8:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 8;
+			break;
+
+		case APB2_DIVIDED_BY_16:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 16;
+			break;
+
+		default:
+			*pu32Freq	=	0;
+	}
+}
+
+void RCC_xGetAPB1_Freq(uint32 *pu32Freq)
+{
+	switch(RCC_obj.Prescaler.ABP1_Prescaler)
+	{
+		case APB1_NOT_DEVIDED:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY;
+			break;
+
+		case APB1_DIVIDED_BY_2:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 2;
+			break;
+
+		case APB1_DIVIDED_BY_4:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 4;
+			break;
+
+		case APB1_DIVIDED_BY_8:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 8;
+			break;
+
+		case APB1_DIVIDED_BY_16:
+			*pu32Freq	=	SYSTEM_CLOCK_FREQUENCY / 16;
+			break;
+
+		default:
+			*pu32Freq	=	0;
+			break;
+	}
+}
