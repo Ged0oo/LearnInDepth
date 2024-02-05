@@ -1,6 +1,7 @@
 #include "RCC_interface.h"
 #include "GPIO_interface.h"
 #include "AFIO_interface.h"
+#include "NVIC_interface.h"
 #include "EXTI_interface.h"
 
 #define NVIC_ISER0  	*((volatile int *)(0xE000E100))
@@ -46,7 +47,7 @@ int main(void)
 	EXTI_vEnableEXTI(EXTI_LINE0);
 
 	// Enable NVIC IRQ6
-	NVIC_ISER0 |= (1<<6);
+	MNVIC_xEnableInterrupt(EXTI0_IRQnum);
 
 	while(1)
 	{
