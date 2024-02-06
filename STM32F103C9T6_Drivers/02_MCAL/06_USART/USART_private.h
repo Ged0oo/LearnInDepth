@@ -10,29 +10,17 @@
 #ifndef __USART_PRIVATE_H__
 #define __USART_PRIVATE_H__
 
+#include "USART_interface.h"
 
 typedef struct
 {
-	volatile uint16 SR;
-	uint16  RESERVED0;
-	
-	volatile uint16 DR;
-	uint16  RESERVED1;
-	
-	volatile uint16 BRR;
-	uint16  RESERVED2;
-	
-	volatile uint16 CR1;
-	uint16  RESERVED3;
-	
-	volatile uint16 CR2;
-	uint16  RESERVED4;
-	
-	volatile uint16 CR3;
-	uint16  RESERVED5;
-	
-	volatile uint16 GTPR;
-	uint16  RESERVED6;
+	volatile uint32 SR;
+	volatile uint32 DR;
+	volatile uint32 BRR;
+	volatile uint32 CR1;
+	volatile uint32 CR2;
+	volatile uint32 CR3;
+	volatile uint32 GTPR;
 } USART_t;
 
 #define USART1_BASE_ADDRESS				(0x40013800)
@@ -93,13 +81,6 @@ typedef struct
 												 ((FLAG) == USART_FLAG_IDLE) || ((FLAG) == USART_FLAG_LBD) || \
 												 ((FLAG) == USART_FLAG_CTS) || ((FLAG) == USART_FLAG_ORE) || \
 												 ((FLAG) == USART_FLAG_NE) || ((FLAG) == USART_FLAG_FE))
-
-static void USART_xSetPins(USART_t *USARTx);
-static void USART_xConfigBaudRate(USART_t *USARTx, uint32 Copy_u32BaudRate);
-static void USART_xConfigStopBits(USART_t *UARTx, USART_StopBits_t Copy_xNStop);
-static void USART_xConfigFlowControl(USART_t *USARTx, USART_FlowCntrl_t Copy_xState);
-static void USART_xConfigWordLength(USART_t *USARTx, USART_WordLength_t Copy_xLength);
-static void USART_xConfigParity(USART_t *USARTx, USART_ParityBit_t Copy_xParityState);
 
 
 #endif  __USART_PRIVATE_H__

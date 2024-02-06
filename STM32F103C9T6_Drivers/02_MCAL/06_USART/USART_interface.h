@@ -10,7 +10,7 @@
 #ifndef __USART_INTERFACE_H__
 #define __USART_INTERFACE_H__
 
-#includes "USART_private"
+#include "USART_private.h"
 
 /*
  * Stop Bits
@@ -131,7 +131,7 @@ typedef struct
 
 	USART_TXRX_t USART_TXRX_State;			/* Specifies TX and RX states of selected USART */
 
-	FunctionalState USART_InitialState;		/* Specifies the initial state for the selected USART */
+	//FunctionalState USART_InitialState;		/* Specifies the initial state for the selected USART */
 
 	USART_ClockInitTypeDef USART_ClkSt; 	/* Specifies clock settings for selected USART */
 	
@@ -143,10 +143,10 @@ typedef struct
 void USART_xInitStruct(USART_InitTypeDef *USART_CnfgSt);
 void USART_xInit(USART_t *USARTx , USART_InitTypeDef *USART_CnfgSt);
 void USART_xConfigTX_RX(USART_t *USARTx,USART_TXRX_t Copy_xState);
-void USART_xConfigState(USART_t *USARTx , FunctionalState Copy_xState);
 void USART_vSendByte(USART_t *USARTx,uint8 data);
 uint8 USART_u8GetByte(USART_t *USARTx);
 
+/*
 void USART_xConfigParityERR_Interrupt(USART_t *USARTx, FunctionalState PE_State);
 void USART_xConfigTXE_Interrupt(USART_t *USARTx, FunctionalState TXE_State);
 void USART_xConfigRXNE_Interrupt(USART_t *USARTx, FunctionalState RXNE_State);
@@ -164,6 +164,6 @@ void UART_vReadBufCustomEnd(USART_t *USARTx ,uint8 * pu8RecvBuf , uint8 Copy_End
 void USART_vTimeOutIncreament(void);
 void USART_vClearTimeOutCounter(void);
 uint32 USART_u32GetTimeOut(void);  
-
+*/
 
 #endif  __USART_INTERFACE_H__
