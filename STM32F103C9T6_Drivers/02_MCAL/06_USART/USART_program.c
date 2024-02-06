@@ -62,34 +62,20 @@ static void USART_xSetPins(USART_t *USARTx)
 static void USART_xConfigBaudRate(USART_t *USARTx, uint32 Copy_u32BaudRate)
 {
 	uint32 PCLK = 0;
-	uint32 Mantissa = 0;
-	uint32 Fraction = 0;
 
 	/*
 	 * Get clock frequency of the selected USART clock
 	 */
 	if(USARTx == USART1)
 	{
-		RCC_xGetAPB2_Freq(&PCLK);
+		PCLK = MRCC_GetPCLK2();
 	}
 	else
 	{
-		RCC_xGetAPB1_Freq(&PCLK);
+		PCLK = MRCC_GetPCLK1();
 	}
 
-	Mantissa = (PCLK) / ( 16 * Copy_u32BaudRate);
-	Fraction = (((PCLK * 100 ) / ( 16 * Copy_u32BaudRate)) % 100 ) * 16;
-
-	if(Fraction > USART_FRACTION_MAX)
-	{
-		Mantissa += 1;
-		Fraction =	0;
-	}
-	
-	/*
-	 * Assign the baudrate value
-	 */
-	USARTx->BRR	= (Mantissa << 4 )	| (Fraction / 100 );
+	USARTx->BRR = USART_BBR(PCLK, Copy_u32BaudRate);
 }
 
 static void USART_xConfigStopBits(USART_t *UARTx, USART_StopBits_t Copy_xNStop)
@@ -148,6 +134,12 @@ static void USART_xConfigParity(USART_t *USARTx, USART_ParityBIT_t Copy_xParityS
 void USART_xInit(USART_t *USARTx , USART_InitTypeDef *USART_CnfgSt)
 {
 	/* 
+	 * Configure initial state of the selected USART
+	 */
+	USART1_CLK_EN();
+	SET_BIT(USARTx->CR1, 13);
+
+	/*
 	 * Set pins of the selected USART 
 	 */
 	USART_xSetPins(USARTx);

@@ -65,18 +65,18 @@ typedef struct
 /*
  * Error checkers
  */
-#define USART_IS_VALID_BAUDRATE(BAUDRATE) 		(((BAUDRATE) > 0) && ((BAUDRATE) < 0x0044AA21))
-#define USART_IS_VALID_STOP_BITS(STOPBITS) 		(((STOPBITS) == USART_ONE_STOP_BIT) || \
+#define USART_IS_VALID_BAUDRATE(BAUDRATE) 		 (((BAUDRATE) > 0) && ((BAUDRATE) < 0x0044AA21))
+#define USART_IS_VALID_STOP_BITS(STOPBITS) 		 (((STOPBITS) == USART_ONE_STOP_BIT) || \
                                      	 	 	 ((STOPBITS) == USART_HALF_STOP_BIT) || \
 												 ((STOPBITS) == USART_TWO_STOP_BITS) || \
 												 ((STOPBITS) == USART_ONE_AND_HALF_STOP_BIT))
 												 
-#define USART_IS_VALID_FLOW_CNTRL(CNTRL)		((CNTRL == USART_HARDWAREFLOWCONTROL_NONE) 		||\
-												(CNTRL 	== USART_HARDWAREFLOWCONTROL_RTS) 		||\
-												(CNTRL 	== USART_HARDWAREFLOWCONTROL_CTS) 		||\
-												(CNTRL 	== USART_HARDWAREFLOWCONTROL_RTS_CTS))
+#define USART_IS_VALID_FLOW_CNTRL(CNTRL)		 ((CNTRL == USART_HARDWAREFLOWCONTROL_NONE) 		||\
+												 (CNTRL 	== USART_HARDWAREFLOWCONTROL_RTS) 		||\
+												 (CNTRL 	== USART_HARDWAREFLOWCONTROL_CTS) 		||\
+												 (CNTRL 	== USART_HARDWAREFLOWCONTROL_RTS_CTS))
 
-#define USART_IS_FLAG(FLAG) 					(((FLAG) == USART_FLAG_PE) || ((FLAG) == USART_FLAG_TXE) || \
+#define USART_IS_FLAG(FLAG) 					 (((FLAG) == USART_FLAG_PE) || ((FLAG) == USART_FLAG_TXE) || \
 												 ((FLAG) == USART_FLAG_TC) || ((FLAG) == USART_FLAG_RXNE) || \
 												 ((FLAG) == USART_FLAG_IDLE) || ((FLAG) == USART_FLAG_LBD) || \
 												 ((FLAG) == USART_FLAG_CTS) || ((FLAG) == USART_FLAG_ORE) || \

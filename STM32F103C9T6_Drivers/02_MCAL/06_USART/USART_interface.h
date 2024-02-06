@@ -12,6 +12,9 @@
 
 #include "USART_private.h"
 
+
+#define USART1_CLK_EN()  (RCC->APB2ENR |= 1<<14)
+
 /*
  * Stop Bits
  */
@@ -20,6 +23,16 @@
 #define USART_TWO_STOP_BITS             ((uint32) 2<<12 )
 #define USART_ONE_AND_HALF_STOP_BIT     ((uint32) 3<<12 )
 typedef unsigned int					USART_StopBits_t;
+
+/*
+ * Baud rate Calculations
+ */
+#define USARTDIV(_PCLK_,_BAUD_)			  (uint32)(_PCLK_ / (16 * _BAUD_))
+#define USARTDIV_MUL100(_PCLK_,_BAUD_)	  (uint32)(25 * _PCLK_ / (4 * _BAUD_))
+#define Mantissa(_PCLK_,_BAUD_)			  USARTDIV(_PCLK_,_BAUD_)
+#define Mantissa_MUL100(_PCLK_,_BAUD_)	  USARTDIV(_PCLK_,_BAUD_) * 100
+#define	DIV_Fraction(_PCLK_,_BAUD_)		  ((USARTDIV_MUL100(_PCLK_,_BAUD_) - Mantissa_MUL100(_PCLK_,_BAUD_)) * 16) / 100
+#define USART_BBR(_PCLK_,_BAUD_)		  (Mantissa(_PCLK_,_BAUD_) << 4) | (DIV_Fraction(_PCLK_,_BAUD_) & 0xf)
 
 /*
  * Flags definitions
