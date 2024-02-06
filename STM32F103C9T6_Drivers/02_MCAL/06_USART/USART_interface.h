@@ -12,7 +12,6 @@
 
 #include "USART_private.h"
 
-
 #define USART1_CLK_EN()  (RCC->APB2ENR |= 1<<14)
 
 /*
@@ -150,10 +149,11 @@ typedef struct
 	
 } USART_InitTypeDef;
 
+extern USART_InitTypeDef USART_CnfgSt;
+
 /*
  * Functions prototypes 
  */
-void USART_xInitStruct(USART_InitTypeDef *USART_CnfgSt);
 void USART_xInit(USART_t *USARTx , USART_InitTypeDef *USART_CnfgSt);
 void USART_xConfigTX_RX(USART_t *USARTx,USART_TXRX_t Copy_xState);
 void USART_vSendByte(USART_t *USARTx,uint8 data);
