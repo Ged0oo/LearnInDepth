@@ -10,6 +10,9 @@
 #include "RCC_config.h"
 #include "RCC_private.h"
 
+const uint8 APBPrescaler[8] 	= 	{1,1,1,1,2,4,8,16};
+const uint16 AHBPrescaler[16] 	= 	{1,1,1,1,1,1,1,1,2,4,8,16,64,128,256,512};
+
 RCC_Config_t RCC_obj =
 {
 	.ClockSource = CLOCK_SOURCE_TYPE,
@@ -287,3 +290,44 @@ void RCC_xGetAPB1_Freq(uint32 *pu32Freq)
 			break;
 	}
 }
+
+uint32 MRCC_GetSYSCLK()
+{
+	switch((RCC->CFGR >> 2) & 0b11)
+	{
+		case 0:
+			return HSI_RC_CLK;
+			break;
+
+		case 1:
+			return HSE_CLK;
+			break;
+
+		case 2:
+		default :
+			return 16000000;
+			break;
+	}
+}
+
+uint32 MRCC_GetHCLK()
+{
+	// Bits 7:4 HPRE: AHB pre-scaler
+	uint32 clk = MRCC_GetSYSCLK() / AHBPrescaler[(RCC->CFGR & (0xf << 4)) >> 4];
+	return clk;
+}
+
+uint32 MRCC_GetPCLK1()
+{
+	// Bits 10:8 PPRE1: APB low-speed pre-scaler (APB1)
+	uint32 clk =  MRCC_GetHCLK() / APBPrescaler[(RCC->CFGR & 0b111<<8)>>8];
+	return clk;
+}
+
+uint32 MRCC_GetPCLK2()
+{
+	// Bits 13:11 PPRE2: APB high-speed pre-scaler (APB2)
+	uint32 clk =  MRCC_GetHCLK() / APBPrescaler[(RCC->CFGR & 0b111<<11)>>11];
+	return clk;
+}
+

@@ -175,6 +175,12 @@ extern RCC_Config_t RCC_obj;
 void MRCC_voidClockInit(RCC_Config_t *RCC_Config);
 void MRCC_voidPeripheralClockEnable(uint8 Copy_u8BusName, RCC_Peripheral_t Copy_u8PeripheralName);
 void MRCC_voidPeripheralClockDisable(uint8 Copy_u8BusName, RCC_Peripheral_t Copy_u8PeripheralName);
+
 void RCC_xGetAPB1_Freq(uint32 *pu32Freq);
 void RCC_xGetAPB2_Freq(uint32 *pu32Freq);
+
+uint32 MCAL_RCC_GetHCLK();
+uint32 MRCC_GetPCLK1();
+uint32 MRCC_GetPCLK2();
+uint32 MRCC_GetSYSCLK();
 #endif
