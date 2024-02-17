@@ -129,10 +129,11 @@ typedef struct
 	uint16				BaudRate;
 }SPI_Config_t;
 
-void SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
-void SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState);
-void SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State);
-void SPI_xSendRecieveSynch(SPI_t* SPIx,SPI_SlaveNum_t Copy_xSlaveNum,SPI_Data_t Copy_xSendData,SPI_Data_t *pxRecvData);
+void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
+void MCAL_SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState);
+void MCAL_SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State);
+void MCAL_SPI_xReciveData(SPI_t* SPIx,uint16 *p_Txbuffer);
+void MCAL_SPI_xSendData(SPI_t* SPIx,uint16 *p_Txbuffer);
 
 
 #endif  __SPI_INTERFACE_H__

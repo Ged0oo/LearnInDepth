@@ -13,8 +13,10 @@
 #include "SPI_private.h"
 #include "SPI_config.h"
 
+
 /* Current slave management state */
 static SPI_SlaveMng_t SPI_SlaveMmg;
+
 
 static void SPI_xSetBidMode( SPI_t* SPIx,SPI_BidMode_t Copy_xMode);
 static void SPI_xEnableCRC( SPI_t* SPIx,SPI_CRCState_t Copy_xOutPutState);
@@ -29,50 +31,76 @@ static void SPI_xSetClkPolarity(SPI_t* SPIx,SPI_CPol_t Copy_xClockPolarityState)
 static void SPI_xSetClkPhase(SPI_t* SPIx,SPI_CPhase_t Copy_xClockPhaseState);
 
 
-void SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
+void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
 {
 	uint8 Local_u8Index	= 0;
 
-	/* Set BI direction mode */
+	/*
+	 * Set BI direction mode
+	 */
 	SPI_xSetBidMode(SPIx,SPIx_Cnfg->BIModeState);
 	
-	/* Set CRC */
+	/*
+	 * Set CRC
+	 */
 	SPI_xEnableCRC(SPIx,SPIx_Cnfg->CRC_State);
 	
-	/* Set CRC phase */
+	/*
+	 * Set CRC phase
+	 * */
 	SPI_xSetCRCPhase(SPIx,SPIx_Cnfg->CRC_TransNextState);
 	
-	/* Set data frame size */
+	/*
+	 * Set data frame size
+	 * */
 	SPI_xSetDataFrameSize(SPIx,SPIx_Cnfg->FrameSize);
 	
-	/* Set transmission direction */
+	/*
+	 * Set transmission direction
+	 *  */
 	SPI_xSetTransferDir(SPIx,SPIx_Cnfg->TransMode);
 	
-	/* Set slave management state */
+	/*
+	 * Set slave management state
+	 * */
 	SPI_xSetSwSlaveMng(SPIx,SPIx_Cnfg->SlaveMngState);
 	
-	/* Set slave pin state */
+	/*
+	 * Set slave pin state
+	 * */
 	SPI_xSetSwSlavePin(SPIx,SPIx_Cnfg->SlavePinState);
 	
-	/* Set frame format (MSB OR LSB) */
+	/*
+	 * Set frame format (MSB OR LSB)
+	 * */
 	SPI_xSetFrameFormat(SPIx,SPIx_Cnfg->FrameFormatState);
 	
-	/* Set Baud rate */
+	/*
+	 * Set Baud rate
+	 * */
 	SPI_xSetBaudRate(SPIx,SPIx_Cnfg->BaudRate);
 	
-	/* Set Master selection (Master or Slave) */
+	/*
+	 * Set Master selection (Master or Slave)
+	 * */
 	SPI_xSelectMaster(SPIx,SPIx_Cnfg->MasterSelection);
 	
-	/* Set clock polarity */
+	/*
+	 * Set clock polarity
+	 * */
 	SPI_xSetClkPolarity(SPIx,SPIx_Cnfg->ClockPolarity);
 	
-	/* Set clock phase */
+	/*
+	 * Set clock phase
+	 * */
 	SPI_xSetClkPhase(SPIx,SPIx_Cnfg->ClockPhase);
 
+	/*
+	 * Initialize slave pins as output and make their ideal state is high
+	 * */
 	if(SPI_ENABLE_SLAVE_MNG	==	SPIx_Cnfg->SlaveMngState)
 	{
 		SPI_SlaveMmg	=	SPI_ENABLE_SLAVE_MNG;
-		/* Initialize slave pins as output and make their ideal state is high */
 		for(Local_u8Index = 0;Local_u8Index < SPI_SlavesNum;Local_u8Index++)
 		{
 			GPIO_vInitPortPin(SPI_MapCnfg[Local_u8Index].SlavePort,SPI_MapCnfg[Local_u8Index].SlavePin,GPIO_OUT);
@@ -80,17 +108,41 @@ void SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
 		}
 	}
 
-	/* Set SPI State (Disable / Enable) */
+	/*
+	 * Set SPI State (Disable / Enable)
+	 * */
 	SPI_xSetState(SPIx,SPIx_Cnfg->SPI_State);
 
-	/* Initialize SPI pins */
+	/*
+	 * Initialize SPI pins
+	 * */
 	GPIO_vInitPortPin(SPI_CLK_PORT,SPI_CLK_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
 	GPIO_vInitPortPin(SPI_MOSI_PORT,SPI_MOSI_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
 	GPIO_vInitPortPin(SPI_MISO_PORT,SPI_MISO_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
 }
 
 
-void SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState)
+void MCAL_SPI_SendData(SPI_t* SPIx,uint16 *p_Txbuffer)
+{
+	/*
+	 * Wait for TX buffer is empty to send data
+	 */
+	while(!(SPIx->SR & 1<<1));
+	SPIx->DR = *p_Txbuffer;
+}
+
+
+void MCAL_SPI_ReciveData(SPI_t* SPIx,uint16 *p_Txbuffer)
+{
+	/*
+	 * Wait for RX buffer is not empty to send data
+	 */
+	while(!(SPIx->SR & 1<<0));
+	*p_Txbuffer = SPIx->DR;
+}
+
+
+void MCAL_SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState)
 {
 	switch(Copy_xState)
 	{
@@ -108,10 +160,13 @@ void SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState)
 }
 
 
-void SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State)
+void MCAL_SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State)
 {
-	/* This bit has an effect only when the SSM bit is set. The value of this bit is forced onto the
-	NSS pin and the IO value of the NSS pin is ignored */
+	/*
+	 * This bit has an effect only when the SSM bit is set.
+	 * The value of this bit is forced onto the
+	 * NSS pin and the IO value of the NSS pin is ignored
+	 * */
 	switch(Copy_xSSI_State)
 	{
 		case SPI_SSI_LOW:
@@ -124,45 +179,6 @@ void SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State)
 			
 		default:
 			break;
-	}
-}
-
-
-void SPI_xSendRecieveSynch(SPI_t* SPIx,SPI_SlaveNum_t Copy_xSlaveNum,SPI_Data_t Copy_xSendData,SPI_Data_t *pxRecvData)
-{
-/*
-	 Check if transmit buffer is empty
-	if(GET_BIT(SPIx->SR,1) == E_NOK)
-		Local_xErrorStatus	=	SPI_TRANSMIT_BUF_ISNOT_EMPTY;
-
-	*/
-	if(SPI_ENABLE_SLAVE_MNG	==	SPI_SlaveMmg)
-	{
-		/* Set slave pin to low to start communication */
-		GPIO_vWritePortPin(SPI_MapCnfg[Copy_xSlaveNum].SlavePort,SPI_MapCnfg[Copy_xSlaveNum].SlavePin,GPIO_HIGH);
-	}
-	
-	/* Send data */
-	SPIx->DR	=	Copy_xSendData;
-
-	/* Wait until busy flag is cleared */
-	while(GET_BIT(SPIx->SR, 7));
-
-
-/*
-	 Check if receive buffer is empty
-	if(GET_BIT(SPIx->SR,0) == 0)
-	{
-		Local_xErrorStatus	=	SPI_RECV_BUF_ISNOT_EMPTY;
-	}
-*/
-
-	*pxRecvData	=	SPIx->DR;
-
-	if(SPI_ENABLE_SLAVE_MNG	==	SPI_SlaveMmg)
-	{
-		/* Set slave pin to high */
-		GPIO_vWritePortPin(SPI_MapCnfg[Copy_xSlaveNum].SlavePort,SPI_MapCnfg[Copy_xSlaveNum].SlavePin->GPIO_HIGH);
 	}
 }
 
@@ -191,6 +207,7 @@ void SPI_xSetBidMode( SPI_t* SPIx,SPI_BidMode_t Copy_xMode)
 	}
 }
 
+
 void SPI_xEnableCRC( SPI_t* SPIx,SPI_CRCState_t Copy_xOutPutState)
 {
 	switch(Copy_xOutPutState)
@@ -207,6 +224,7 @@ void SPI_xEnableCRC( SPI_t* SPIx,SPI_CRCState_t Copy_xOutPutState)
 			break;
 	}
 }
+
 
 void SPI_xSetCRCPhase( SPI_t* SPIx,SPI_CRCPhase_t Copy_xCRCState)
 {
@@ -225,6 +243,7 @@ void SPI_xSetCRCPhase( SPI_t* SPIx,SPI_CRCPhase_t Copy_xCRCState)
 	}
 }
 
+
 void SPI_xSetDataFrameSize( SPI_t* SPIx,SPI_DataFrame_t Copy_xDataLength)
 {
 	switch(Copy_xDataLength)
@@ -241,6 +260,7 @@ void SPI_xSetDataFrameSize( SPI_t* SPIx,SPI_DataFrame_t Copy_xDataLength)
 			break;
 	}
 }
+
 
 void SPI_xSetTransferDir(SPI_t* SPIx,SPI_TransDir_t Copy_xDataLength)
 {
@@ -259,6 +279,7 @@ void SPI_xSetTransferDir(SPI_t* SPIx,SPI_TransDir_t Copy_xDataLength)
 	}
 }
 
+
 void SPI_xSetSwSlaveMng(SPI_t* SPIx,SPI_SlaveMng_t Copy_xDataLength)
 {
 	switch(Copy_xDataLength)
@@ -275,6 +296,7 @@ void SPI_xSetSwSlaveMng(SPI_t* SPIx,SPI_SlaveMng_t Copy_xDataLength)
 			break;
 	}
 }
+
 
 void SPI_xSetFrameFormat(SPI_t* SPIx,SPI_FrameFormat_t Copy_xFormat)
 {
@@ -293,14 +315,20 @@ void SPI_xSetFrameFormat(SPI_t* SPIx,SPI_FrameFormat_t Copy_xFormat)
 	}
 }
 
+
 void SPI_xSetBaudRate(SPI_t* SPIx,uint16 Copy_u16BaudRate)
 {
-	/* Clear selection bits */
+	/*
+	 * Clear selection bits
+	 *  */
 	SPIx->CR1 &= 0xFFC7;
 
-	/* Assign baud rate */
+	/*
+	 * Assign baud rate
+	 * */
 	SPIx->CR1 |= Copy_u16BaudRate;
 }
+
 
 void SPI_xSelectMaster(SPI_t* SPIx,SPI_MSTR_t Copy_xState)
 {
@@ -319,6 +347,7 @@ void SPI_xSelectMaster(SPI_t* SPIx,SPI_MSTR_t Copy_xState)
 	}	
 }
 
+
 void SPI_xSetClkPolarity(SPI_t* SPIx,SPI_CPol_t Copy_xClockPolarityState)
 {
 	switch(Copy_xClockPolarityState)
@@ -335,6 +364,7 @@ void SPI_xSetClkPolarity(SPI_t* SPIx,SPI_CPol_t Copy_xClockPolarityState)
 			break;
 	}	
 }
+
 
 void SPI_xSetClkPhase(SPI_t* SPIx,SPI_CPhase_t Copy_xClockPhaseState)
 {
