@@ -14,7 +14,27 @@
 #include "SPI_config.h"
 
 
-/* Current slave management state */
+SPI_Config_t spiCFG =
+{
+		.BIModeState = SPI_CONFIGURED_BI_MODE,
+		.BaudRate = SPI_CONFIGURED_BR,
+		.CRC_State = SPI_CONFIGURED_CRCState,
+		.CRC_TransNextState = SPI_CONFIGURED_CRCPhase,
+		.ClockPhase = SPI_CONFIGURED_CPhase,
+		.ClockPolarity = SPI_CONFIGURED_CPol,
+		.FrameFormatState = SPI_CONFIGURED_FrameFormat,
+		.FrameSize =  SPI_CONFIGURED_DataFrame,
+		.MasterSelection = SPI_CONFIGURED_MSTR,
+		.SPI_State = SPI_CONFIGURED_State,
+		.SlaveMngState = SPI_CONFIGURED_SlaveMng,
+		.SlavePinState = SPI_CONFIGURED_SlavePinState,
+		.TransMode = SPI_CONFIGURED_TransDir
+};
+
+
+/*
+ * Current slave management state
+ */
 static SPI_SlaveMng_t SPI_SlaveMmg;
 
 

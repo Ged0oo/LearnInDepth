@@ -129,6 +129,8 @@ typedef struct
 	uint16				BaudRate;
 }SPI_Config_t;
 
+extern SPI_Config_t spiCFG;
+
 void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
 void MCAL_SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState);
 void MCAL_SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State);

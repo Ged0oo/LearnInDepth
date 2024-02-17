@@ -13,6 +13,22 @@
 
 #include "GPIO_interface.h"
 
+
+#define SPI_CONFIGURED_BI_MODE					SPI_TWO_LINES_UNIDIR_MODE
+#define SPI_CONFIGURED_BR						SPI_BR_Prescaler_8
+#define SPI_CONFIGURED_CRCState					SPI_DISABLE_CRC
+#define SPI_CONFIGURED_CRCPhase					SPI_NO_CRC_PHASE
+#define SPI_CONFIGURED_DataFrame				SPI_8_BIT_DATA_FRAME
+#define SPI_CONFIGURED_TransDir					SPI_SIMPLEX_RECV
+#define SPI_CONFIGURED_SlaveMng					SPI_DISABLE_SLAVE_MNG
+#define SPI_CONFIGURED_SlavePinState			SPI_SSI_LOW
+#define SPI_CONFIGURED_FrameFormat				SPI_MSB_FIRST
+#define SPI_CONFIGURED_State					SPI_ENABLE
+#define SPI_CONFIGURED_MSTR						SPI_MASTER
+#define SPI_CONFIGURED_CPol						SPI_CPOL_LOW
+#define SPI_CONFIGURED_CPhase					SPI_CPHA_First_Edge
+
+
 #define SPI_N_SLAVES							(1)
 static uint8 SPI_SlavesNum = SPI_N_SLAVES;
 
