@@ -143,8 +143,6 @@ typedef struct
 
 	USART_TXRX_t USART_TXRX_State;			/* Specifies TX and RX states of selected USART */
 
-	//FunctionalState USART_InitialState;		/* Specifies the initial state for the selected USART */
-
 	USART_ClockInitTypeDef USART_ClkSt; 	/* Specifies clock settings for selected USART */
 	
 } USART_InitTypeDef;
@@ -158,25 +156,5 @@ void USART_xInit(USART_t *USARTx , USART_InitTypeDef *USART_CnfgSt);
 void USART_xConfigTX_RX(USART_t *USARTx,USART_TXRX_t Copy_xState);
 void USART_vSendByte(USART_t *USARTx,uint8 data);
 uint8 USART_u8GetByte(USART_t *USARTx);
-
-/*
-void USART_xConfigParityERR_Interrupt(USART_t *USARTx, FunctionalState PE_State);
-void USART_xConfigTXE_Interrupt(USART_t *USARTx, FunctionalState TXE_State);
-void USART_xConfigRXNE_Interrupt(USART_t *USARTx, FunctionalState RXNE_State);
-void USART_xConfigRXNE_Interrupt(USART_t *USARTx, FunctionalState RXNE_State);
-void USART_xConfigERR_Interrupt(USART_t *USARTx, FunctionalState ERR_State);	
-
-Flag_Status USART_GetFlagStatus(USART_t* USARTx, uint16 USART_FLAG);
-Error_Status USART_vSendByteTimeOut(USART_t *USARTx,uint8 data , uint32 Copy_u32TimeOutMS);
-Flag_Status USART_u8GetByteTimeOut(USART_t *USARTx , uint8 *pu8RecvData , uint32 Copy_u32TimeOutMS);
-
-void UART_vWriteBuf(USART_t *USARTx ,uint8 * pu8MsgBuf);
-void UART_vReadBuf(USART_t *USARTx ,uint8 * pu8RecvBuf);		 
-void UART_vReadBufCustomEnd(USART_t *USARTx ,uint8 * pu8RecvBuf , uint8 Copy_EndChar);
-
-void USART_vTimeOutIncreament(void);
-void USART_vClearTimeOutCounter(void);
-uint32 USART_u32GetTimeOut(void);  
-*/
 
 #endif  __USART_INTERFACE_H__
