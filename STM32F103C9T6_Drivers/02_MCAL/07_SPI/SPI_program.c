@@ -14,7 +14,7 @@
 #include "SPI_config.h"
 
 
-SPI_Config_t spiCFG =
+SPI_Config_t SPIx_Cnfg =
 {
 		.BIModeState = SPI_CONFIGURED_BI_MODE,
 		.BaudRate = SPI_CONFIGURED_BR,
@@ -49,6 +49,8 @@ static void SPI_xSetBaudRate(SPI_t* SPIx,uint16 Copy_u16BaudRate);
 static void SPI_xSelectMaster(SPI_t* SPIx,SPI_MSTR_t Copy_xState);
 static void SPI_xSetClkPolarity(SPI_t* SPIx,SPI_CPol_t Copy_xClockPolarityState);
 static void SPI_xSetClkPhase(SPI_t* SPIx,SPI_CPhase_t Copy_xClockPhaseState);
+static void SPI_xConigurePins(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
+static void SPI_xConigureSlavePins(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
 
 
 void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
@@ -116,29 +118,16 @@ void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
 	SPI_xSetClkPhase(SPIx,SPIx_Cnfg->ClockPhase);
 
 	/*
-	 * Initialize slave pins as output and make their ideal state is high
-	 * */
-	if(SPI_ENABLE_SLAVE_MNG	==	SPIx_Cnfg->SlaveMngState)
-	{
-		SPI_SlaveMmg	=	SPI_ENABLE_SLAVE_MNG;
-		for(Local_u8Index = 0;Local_u8Index < SPI_SlavesNum;Local_u8Index++)
-		{
-			GPIO_vInitPortPin(SPI_MapCnfg[Local_u8Index].SlavePort,SPI_MapCnfg[Local_u8Index].SlavePin,GPIO_OUT);
-			GPIO_vWritePortPin(SPI_MapCnfg[Local_u8Index].SlavePort,SPI_MapCnfg[Local_u8Index].SlavePin,GPIO_HIGH);
-		}
-	}
-
-	/*
 	 * Set SPI State (Disable / Enable)
 	 * */
-	SPI_xSetState(SPIx,SPIx_Cnfg->SPI_State);
+	MCAL_SPI_xSetState(SPIx,SPIx_Cnfg->SPI_State);
 
 	/*
-	 * Initialize SPI pins
-	 * */
-	GPIO_vInitPortPin(SPI_CLK_PORT,SPI_CLK_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
-	GPIO_vInitPortPin(SPI_MOSI_PORT,SPI_MOSI_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
-	GPIO_vInitPortPin(SPI_MISO_PORT,SPI_MISO_PIN,GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ);
+	 * SPI Pins Configure
+	 */
+	SPI_xConigurePins(SPIx, SPIx_Cnfg);
+	SPI_xConigureSlavePins(SPIx, SPIx_Cnfg);
+
 }
 
 
@@ -169,18 +158,77 @@ void MCAL_SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState)
 		case SPI_DISABLE:
 			CLEAR_BIT(SPIx->CR1,6);
 			break;
-			
+
 		case SPI_ENABLE:
 			SET_BIT(SPIx->CR1,6);
 			break;
-			
+
 		default:
 			break;
 	}
 }
 
 
-void MCAL_SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State)
+void SPI_xConigureSlavePins(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
+{
+	uint8 Local_u8Index	= 0;
+
+	/*
+	 * Initialize slave pins as output and make their ideal state is high
+	 * */
+	if(SPI_ENABLE_SLAVE_MNG	==	SPIx_Cnfg->SlaveMngState)
+	{
+		SPI_SlaveMmg	=	SPI_ENABLE_SLAVE_MNG;
+		for(Local_u8Index = 0;Local_u8Index < SPI_SlavesNum;Local_u8Index++)
+		{
+			GPIO_ConfigType xpin =
+			{
+					.GPIOx = SPI_MapCnfg[Local_u8Index].SlavePort,
+					.GPIO_PinNumber = SPI_MapCnfg[Local_u8Index].SlavePin,
+					.GPIO_PinMode = GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_2HZ,
+					.GPIO_Logic = GPIO_HIGH
+			};
+			MGPIO_voidInitPortPin(&xpin);
+		}
+	}
+}
+
+
+void SPI_xConigurePins(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg)
+{
+	uint8 Local_u8Index	= 0;
+
+	/*
+	 * Initialize SPI pins
+	 * */
+
+	GPIO_ConfigType miso =
+	{
+			.GPIOx = SPI_MISO_PORT,
+			.GPIO_PinNumber = SPI_MISO_PIN,
+			.GPIO_PinMode = GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ
+	};
+	MGPIO_voidInitPortPin(&miso);
+
+	GPIO_ConfigType mosi =
+	{
+			.GPIOx = SPI_MOSI_PORT,
+			.GPIO_PinNumber = SPI_MOSI_PIN,
+			.GPIO_PinMode = GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ
+	};
+	MGPIO_voidInitPortPin(&mosi);
+
+	GPIO_ConfigType clk =
+	{
+			.GPIOx = SPI_CLK_PORT,
+			.GPIO_PinNumber = SPI_MapCnfg[Local_u8Index].SlavePin,
+			.GPIO_PinMode = GPIO_PIN_ALTERANTIVE_FUNCTION_OUTPUT_PUSHPULL_MODE_10MHZ
+	};
+	MGPIO_voidInitPortPin(&clk);
+}
+
+
+void SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State)
 {
 	/*
 	 * This bit has an effect only when the SSM bit is set.
