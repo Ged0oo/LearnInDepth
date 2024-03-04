@@ -6,136 +6,146 @@
  * Created on Febreuary 16, 2024, 8:41 PM
  */
 
-
 #ifndef __SPI_INTERFACE_H__
 #define __SPI_INTERFACE_H__
 
 #include "SPI_private.h"
+#include "NVIC_private.h".h"
 
-typedef uint8				SPI_BidMode_t;
-typedef uint8				SPI_CRCState_t;
-typedef uint8				SPI_CRCPhase_t;
-typedef uint8				SPI_DataFrame_t;
-typedef uint8				SPI_TransDir_t;
-typedef uint8				SPI_SlaveMng_t;
-typedef uint8				SPI_SlavePinState_t;
-typedef uint8				SPI_FrameFormat_t;
-typedef uint8				SPI_State_t;
-typedef uint8				SPI_MSTR_t;
-typedef uint8				SPI_CPol_t;
-typedef uint8				SPI_CPhase_t;
-typedef uint8				SPI_Data_t;
-typedef uint8				SPI_SlaveNum_t;
 
-/* 
- * SPI Baud rate Pre-scalers 
+/*
+ * SPI Clock Enable
  */
-#define SPI_BR_Prescaler_2				((uint16)0x0000)
-#define SPI_BR_Prescaler_4				((uint16)0x0008)
-#define SPI_BR_Prescaler_8				((uint16)0x0010)
-#define SPI_BR_Prescaler_16 			((uint16)0x0018)
-#define SPI_BR_Prescaler_32 			((uint16)0x0020)
-#define SPI_BR_Prescaler_64 			((uint16)0x0028)
-#define SPI_BR_Prescaler_128			((uint16)0x0030)
-#define SPI_BR_Prescaler_256			((uint16)0x0038)
+#define SPI_ENABLE  		(1<<6)
+#define SPI_DISABLE	    	(0<<6)
 
-/* 
- * Direction modes 
+/*
+ * SPI Clock Enable
  */
-#define SPI_TWO_LINES_UNIDIR_MODE							(0)
-#define SPI_ONE_LINE_BIDIR_MODE_OUTPUT_DISABLE				(1)
-#define SPI_ONE_LINE_BIDIR_MODE_OUTPUT_ENABLE_OUTPUT		(2)
+#define SPI1_CLK_EN()  		(RCC->APB2ENR |= 1<<12)
+#define SPI2_CLK_EN()    	(RCC->APB1ENR |= 1<<14)
 
-/* 
- * SPI CRC states 
- */
-#define SPI_DISABLE_CRC						(0)
-#define SPI_ENABLE_CRC						(1)
 
-/* 
- * SPI CRC Phases 
+/*
+ * SPI IRQs
  */
-#define SPI_NO_CRC_PHASE					(0)
-#define SPI_CRC_PHASE						(1)
-		
-/* 
- * SPI Size of frame 
- */
-#define SPI_8_BIT_DATA_FRAME				(0)
-#define SPI_16_BIT_DATA_FRAME				(1)
-		
-/* 
- * SPI data transfer modes 
- */
-#define SPI_FULL_DUPLEX						(0)
-#define SPI_SIMPLEX_RECV					(1)
-		
-/* 
- * SPI Receiving states 
- */
-#define SPI_DISABLE_SLAVE_MNG				(0)
-#define SPI_ENABLE_SLAVE_MNG				(1)
+#define NVIC_IRQ35_SPI1_Enable()		NVIC_ISER1 |=1<<3
+#define NVIC_IRQ36_SPI2_Enable()		NVIC_ISER1 |=1<<4
+#define NVIC_IRQ35_SPI1_Disable()		NVIC_ICER1 |=1<<3
+#define NVIC_IRQ36_SPI2_Disable()		NVIC_ICER1 |=1<<4
 
-/* 
- * SPI slave select states 
+/*
+ * SPI IRQ Sources
  */
-#define SPI_SSI_LOW							(0)
-#define SPI_SSI_HIGH						(1)
-
-/* 
- * SPI Frame format 
- */
-#define	SPI_LSB_FIRST						(0)
-#define	SPI_MSB_FIRST						(1)
-
-/* 
- * SPI States 
- */
-#define SPI_DISABLE							(0)
-#define	SPI_ENABLE							(1)
-
-/* 
- * SPI master selection 
- */
-#define SPI_SLAVE							(0)
-#define SPI_MASTER							(1)
-
-/* 
- * SPI clock polarity states 
- */
-#define SPI_CPOL_LOW 						(0)
-#define SPI_CPOL_HIGH						(1)
-
-/* 
- * SPI clock phases 
- */
-#define SPI_CPHA_First_Edge 						(0)
-#define SPI_CPHA_Second_Edge						(1)
-
 typedef struct
 {
-	SPI_BidMode_t		BIModeState;
-	SPI_CRCState_t		CRC_State;
-	SPI_CRCPhase_t		CRC_TransNextState;
-	SPI_DataFrame_t		FrameSize;
-	SPI_TransDir_t		TransMode;
-	SPI_SlaveMng_t		SlaveMngState;
-	SPI_SlavePinState_t	SlavePinState;
-	SPI_FrameFormat_t 	FrameFormatState;
-	SPI_State_t			SPI_State;
-	SPI_MSTR_t			MasterSelection;
-	SPI_CPol_t			ClockPolarity;
-	SPI_CPhase_t		ClockPhase;
-	uint16				BaudRate;
-}SPI_Config_t;
+	uint8 TXE : 1;
+	uint8 RXE : 1;
+	uint8 ERRI : 1;
+	uint8 RES : 8;
+}IRQSource_t;
 
+/*
+ * Polling Mechanism ability
+ */
+typedef enum
+{
+	Disable,
+	Enable
+}Polling_e;
+
+/*
+ * SPI Configuration Structure
+ */
+typedef struct
+{
+	uint16				Mode;
+	uint16				CommunicationMode;
+	uint16				FrameFormat;
+	uint16				DataSize;
+	uint16				ClockPolarity;
+	uint16				ClockPhase;
+	uint16				NSS;
+	uint16				BRPrescaller;
+	uint16				IRQEnable;
+	void(*IRQ_CallBack)(IRQSource_t _irq);
+}SPI_Config_t;
 extern SPI_Config_t SPIx_Cnfg;
 
-void MCAL_SPI_xInit(SPI_t* SPIx,const SPI_Config_t *SPIx_Cnfg);
-void MCAL_SPI_xSetState(SPI_t* SPIx,SPI_State_t Copy_xState);
-void MCAL_SPI_xSetSwSlavePin(SPI_t* SPIx,SPI_SlavePinState_t Copy_xSSI_State);
-void MCAL_SPI_xReciveData(SPI_t* SPIx,uint16 *p_Txbuffer);
-void MCAL_SPI_xSendData(SPI_t* SPIx,uint16 *p_Txbuffer);
+/*
+ * SPI Mode define
+ */
+#define SPI_MASTER_MODE					(1<<2)
+#define SPI_SLAVE_MODE					(0<<2)
 
+/*
+ * SPI Communication Mode define
+ */
+#define SPI_COMMUNICATION_MODE_TWO_LINE_FULL_DUPLEX			(0)
+#define SPI_COMMUNICATION_MODE_TWO_RX						(1<<10)
+#define SPI_COMMUNICATION_MODE_ONE_TX						(1<<15 | 1<<14)
+#define SPI_COMMUNICATION_MODE_ONE_RX						(1<<15)
+
+/*
+ * SPI Frame Format define
+ */
+#define 	SPI_FRAME_MSB_FIRST				(0<<7)
+#define 	SPI_FRAME_LSB_FIRST				(1<<7)
+
+/*
+ * Data Size define
+ */
+#define 	SPI_DATA_SIZE_8BIT			(0<<11)
+#define 	SPI_DATA_SIZE_16BIT			(1<<11)
+
+
+/*
+ * SPI Clock Polarity define
+ */
+#define		SPI_CLOCK_POLARITY_IDLE_LOW		(0<<1)
+#define		SPI_CLOCK_POLARITY_IDLE_HIGH	(1<<1)
+
+/*
+ * SPI Clock Phase define
+ */
+#define		SPI_CLOCK_PHASE_FIRST_EDGE		(0<<0)
+#define		SPI_CLOCK_PHASE_SECOND_EDGE		(1<<0)
+
+/*
+ * SPI NSS define
+ */
+#define 	SPI_NSS_HW_SLAVE					(0)
+#define 	SPI_NSS_HW_MASTER_OUT				(1<<2)
+#define 	SPI_NSS_HW_MASTER_IN				(0)
+#define 	SPI_NSS_SW_SLAVE					(1<<9)
+#define 	SPI_NSS_SW_MASTER					(1<<9 | 1<<8)
+
+/*
+ * SPI Baud Rate Prescallers define
+ */
+#define SPI_BAUDERATE_PRESCALER_2 		0
+#define SPI_BAUDERATE_PRESCALER_4		1<<3
+#define SPI_BAUDERATE_PRESCALER_8		2<<3
+#define SPI_BAUDERATE_PRESCALER_16 		3<<3
+#define SPI_BAUDERATE_PRESCALER_32 		4<<3
+#define SPI_BAUDERATE_PRESCALER_64 		5<<3
+#define SPI_BAUDERATE_PRESCALER_128 	6<<3
+#define SPI_BAUDERATE_PRESCALER_256 	7<<3
+
+/*
+ * SPI IRQ Enable define
+ */
+#define SPI_IRQ_Enable_None			0
+#define SPI_IRQ_Enable_TXEIE		1<<7
+#define SPI_IRQ_Enable_RXNEIE		1<<6
+#define SPI_IRQ_Enable_ERRIE		1<<5
+
+void MCAL_SPI_Init(SPI_t* SPIx, SPI_Config_t* SPI_Config);
+void MCAL_SPI_DeInit(SPI_t* SPIx);
+void MCAL_SPI_ConigureSlavePins(SPI_t* SPIx, SPI_Config_t *SPIx_Cnfg);
+void MCAL_SPI_ConigurePins(SPI_t* SPIx, SPI_Config_t *SPIx_Cnfg);
+void MCAL_SPI_SendData(SPI_t* SPIx, uint16* p_Txbuffer, Polling_e Polling);
+void MCAL_SPI_ReceiveData(SPI_t* SPIx, uint16* p_Rxbuffer, Polling_e Polling);
+void MCAL_SPI_TX_RX(SPI_t* SPIx, uint16* p_buffer, Polling_e Polling);
 
 #endif  __SPI_INTERFACE_H__
