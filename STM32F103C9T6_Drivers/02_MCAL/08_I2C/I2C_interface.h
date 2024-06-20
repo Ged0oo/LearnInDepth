@@ -1,0 +1,13 @@
+/* 
+ * File:   I2C_INTERFACE.h
+ * Author: Mohamed_Nagy
+ * https://github.com/Ged0oo 
+ * https://www.linkedin.com/in/mohamednagyofficial/
+ * Created on June 20, 2024, 8:41 PM
+ */
+
+
+#ifndef __I2C_INTERFACE_H__
+#define __I2C_INTERFACE_H__
+				   
+#endif  __I2C_INTERFACE_H__
